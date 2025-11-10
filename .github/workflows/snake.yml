@@ -2,15 +2,17 @@ name: Generate Snake
 
 on:
   schedule:
-    - cron: "10 0 * * *" # 每天 0 点10分自动运行一次
-  workflow_dispatch:      # 允许手动触发
+    - cron: "10 0 * * *"
+  workflow_dispatch:
   push:
     branches:
-      - main              # 当 main 分支有变动时触发
+      - main
+
+permissions:
+  contents: write  # <-- 必加
 
 jobs:
   build:
-    name: generate github contribution snake
     runs-on: ubuntu-latest
 
     steps:
@@ -20,13 +22,13 @@ jobs:
       - name: Generate snake animation
         uses: Platane/snk@v3
         with:
-          github_user_name: icepage
+          github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
-            dist/github-contribution-grid-snake-ocean.svg?color_snake=orange&color_dots=#dadcdf94,#8dbdff,#64a1f4,#4b91f1,#3c7dd9
+            dist/snake.svg
+            dist/snake-dark.svg?palette=github-dark
+            dist/snake-ocean.svg?color_snake=orange&color_dots=#dadcdf94,#8dbdff,#64a1f4,#4b91f1,#3c7dd9
 
-      - name: Push to output branch
+      - name: Push snake to output branch
         uses: crazy-max/ghaction-github-pages@v4.1.0
         with:
           target_branch: output
